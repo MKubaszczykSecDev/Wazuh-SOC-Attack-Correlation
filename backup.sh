@@ -1,5 +1,5 @@
 #!/bin/bash
-# Updated Backup script for MKubaszczykSecDev (Options C & E)
+# Backup script
 REPO_DIR="$HOME/Wazuh-SOC-Attack-Correlation"
 
 echo "Backing up Wazuh Server and Red Team Logic..."
@@ -7,7 +7,7 @@ echo "Backing up Wazuh Server and Red Team Logic..."
 # 1. Wazuh Server Logic
 sudo cp /var/ossec/etc/ossec.conf $REPO_DIR/wazuh-server/
 sudo cp /var/ossec/etc/rules/local_rules.xml $REPO_DIR/wazuh-server/rules/
-sudo cp /var/ossec/etc/decoders/local_decoders.xml $REPO_DIR/wazuh-server/decoders/
+#sudo cp /var/ossec/etc/decoders/local_decoders.xml $REPO_DIR/wazuh-server/decoders/
 sudo cp /var/ossec/etc/shared/default/agent.conf $REPO_DIR/wazuh-server/agent.conf
 
 # 2. Target Hardening (Placeholder for files you'll pull from Victim VM)

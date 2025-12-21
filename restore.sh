@@ -11,4 +11,4 @@ sudo cp $REPO_DIR/wazuh-server/decoders/local_decoders.xml /var/ossec/etc/decode
 sudo cp $REPO_DIR/wazuh-server/agent.conf /var/ossec/etc/shared/default/agent.conf
 
 echo "Restore complete. Restarting Wazuh Manager to apply changes..."
-sudo systemctl restart wazuh-manager#
+sudo systemctl restart wazuh-manager
