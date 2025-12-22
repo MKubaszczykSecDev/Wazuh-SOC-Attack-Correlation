@@ -4,16 +4,31 @@
 <!-- Copyright (C) 2015, Wazuh Inc. -->
 
 <!-- Example -->
+
+
 <group name="local,syslog,sshd,">
 
-  <!--
-  Dec 10 01:02:02 host sshd[1234]: Failed none for root from 1.1.1.1 port 1066 ssh2
-  -->
-  <rule id="100001" level="5">
-    <if_sid>5716</if_sid>
-    <srcip>1.1.1.1</srcip>
-    <description>sshd: authentication failed from IP 1.1.1.1.</description>
-    <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,</group>
+<!-- Rule for detecting Root login attempts -->
+
+  <rule id="100001" level="9">
+    <if_sid>5760</if_sid>
+    <match>root</match>
+    <description>Direct SSH Root Login Attempt Detected</description>
+    <mitre>
+      <id>T1078.003</id>
+    </mitre>
+  </rule>
+
+<!-- Rule for correlating brute force attack with a following up successful login -->
+
+  <rule id="100002" level="12" overwrite="yes">
+    <if_sid>5715</if_sid>
+    <if_matched_sid>5712</if_matched_sid>
+    <same_source_ip />
+    <description>CRITICAL: Successful SSH login following brute-force attack</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
   </rule>
 
 </group>
