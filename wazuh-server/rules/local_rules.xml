@@ -2,32 +2,44 @@
 
 <!-- Modify it at your will. -->
 <!-- Copyright (C) 2015, Wazuh Inc. -->
-
 <!-- Example -->
 
 
 <group name="local,syslog,sshd,">
 
-<!-- Rule for detecting Root login attempts -->
+  <rule id="100000" level="5">
+    <if_sid>5710</if_sid>
+    <description>Multiple SSH authentication failures detected</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
+  </rule>
 
   <rule id="100001" level="9">
-    <if_sid>5760</if_sid>
+    <if_sid>5710, 5711, 5716</if_sid>
     <match>root</match>
-    <description>Direct SSH Root Login Attempt Detected</description>
+    <description>SSH root login attempt detected</description>
     <mitre>
       <id>T1078.003</id>
     </mitre>
   </rule>
 
-<!-- Rule for correlating brute force attack with a following up successful login -->
-
-  <rule id="100002" level="12" overwrite="yes">
+  <rule id="100002" level="12">
     <if_sid>5715</if_sid>
-    <if_matched_sid>5712</if_matched_sid>
+    <if_matched_sid>100000</if_matched_sid>
     <same_source_ip />
-    <description>CRITICAL: Successful SSH login following brute-force attack</description>
+    <description>Successful SSH login following a brute force attack</description>
     <mitre>
       <id>T1110</id>
+    </mitre>
+  </rule>
+
+  <rule id="100003" level="3">
+    <if_sid>5715</if_sid>
+    <match>publickey</match>
+    <description>Successful SSH key based authentication</description>
+    <mitre>
+      <id>T1021.002</id>
     </mitre>
   </rule>
 
