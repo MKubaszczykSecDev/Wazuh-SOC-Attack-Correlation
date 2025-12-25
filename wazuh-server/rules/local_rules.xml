@@ -5,18 +5,24 @@
 <!-- Example -->
 
 
-<group name="local,syslog,sshd,authenication_success">
+<group name="ssh_custom_group">
 
-  <rule id="100000" level="5" overwrite="yes">
-    <if_sid>5710, 5760</if_sid>
-    <description>Multiple SSH authentication failures detected</description>
+<rule id="100000" level="5">
+    <if_sid>5760, 5716</if_sid>
+    <description>SSH authentication failure detected</description>
+  </rule>
+
+  <rule id="100001" level="10" frequency="8" timeframe="60">
+    <if_matched_sid>100000</if_matched_sid>
+    <same_srcip />
+    <description>Multiple SSH authentication failures detected from the same IP address</description>
     <mitre>
       <id>T1110</id>
     </mitre>
   </rule>
 
-  <rule id="100001" level="9">
-    <if_sid>5710, 5711, 5716</if_sid>
+  <rule id="100002" level="12" frequency="3" timeframe="30">
+    <if_matched_sid>100000</if_matched_sid>
     <match>root</match>
     <description>SSH root login attempt detected</description>
     <mitre>
@@ -24,17 +30,17 @@
     </mitre>
   </rule>
 
-  <rule id="100002" level="12">
+  <rule id="100003" level="14">
     <if_sid>5715</if_sid>
-    <if_matched_sid>100000</if_matched_sid>
-    <same_source_ip />
+    <if_matched_sid>100001</if_matched_sid>
+    <same_srcip />
     <description>Successful SSH login following a brute force attack</description>
     <mitre>
       <id>T1110</id>
     </mitre>
   </rule>
 
-  <rule id="100003" level="3" overwrite="yes">
+  <rule id="100004" level="3" overwrite="yes">
     <if_sid>5715</if_sid>
     <match>publickey</match>
     <description>Successful SSH key based authentication</description>
