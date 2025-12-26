@@ -1,14 +1,14 @@
-# --------------- Commands / Guide how to use git ---------
+--------- Guide how to use git ---------
 
 I have configured aliases in my ~/.bashrc to make these commands run instantly from any directory
 
-+---------+----------------------------------------------------+----------------------------------------------------------------------------+
-|Command  |   Action                                           |    When to use it                                                          |
-+---------+----------------------------------------------------+----------------------------------------------------------------------------+
-|backup   |   Copies live Wazuh configs into your Git folder.  |   Always run this before and after making a major rule change.             |
-|restore  |   Pushes Git files back to the Wazuh system.	     |   Use this if you break your XML syntax and the manager won't start.       |
-|git push |   Sends your backed-up files to GitHub.	           |   Run this at the end of every study session to save your progress online. |
-+---------+----------------------------------------------------+----------------------------------------------------------------------------+
++---------+------------------------------------------------+----------------------------------------------------------------+
+|Command  |   Action                                       |    When to use it                                              |
++---------+------------------------------------------------+----------------------------------------------------------------+
+|backup   | Copies live Wazuh configs into your Git folder | Always run this before and after making a major rule change.   |
+|restore  | Pushes Git files back to the Wazuh system 	   | If you break your XML syntax and the manager won't start.      |
+|git push | Sends your backed-up files to GitHub 	         | At the end of every session to save your progress online.      |
++---------+------------------------------------------------+----------------------------------------------------------------+
 
 The Standard "Save Point" Workflow
 When I complete a task, (with no issues) follow this exact sequence to ensure it is documented:
