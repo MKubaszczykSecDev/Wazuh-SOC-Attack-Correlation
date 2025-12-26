@@ -3,11 +3,11 @@
 I have configured aliases in my ~/.bashrc to make these commands run instantly from any directory
 
 +---------+------------------------------------------------+----------------------------------------------------------------+
-|Command  |   Action                                       |    When to use it                                              |
+|Command__|_Action_________________________________________|____When to use it______________________________________________|
 +---------+------------------------------------------------+----------------------------------------------------------------+
-|backup   | Copies live Wazuh configs into your Git folder | Always run this before and after making a major rule change.   |
-|restore  | Pushes Git files back to the Wazuh system 	   | If you break your XML syntax and the manager won't start.      |
-|git push | Sends your backed-up files to GitHub 	         | At the end of every session to save your progress online.      |
+|backup___|_Copies live Wazuh configs into your Git folder_|_Always run this before and after making a major rule change____|
+|restore__|_Pushes Git files back to the Wazuh system______|_If you break your XML syntax and the manager won't start_______|
+|git push_|_Sends your backed-up files to GitHub___________|_At the end of every session to save your progress online_______|
 +---------+------------------------------------------------+----------------------------------------------------------------+
 
 The Standard "Save Point" Workflow
