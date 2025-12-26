@@ -1,4 +1,4 @@
-# --------------- Commands / Guide how to use git ------------------ #
+# --------------- Commands / Guide how to use git ---------
 
 I have configured aliases in my ~/.bashrc to make these commands run instantly from any directory
 
