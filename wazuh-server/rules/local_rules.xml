@@ -94,4 +94,108 @@
   </rule>
 </group>
 
+<!-- Custom Group created for FIM detection rules -->
+<!-- Custom Rule for detecting if files in the /srv/ftp directory have been viewed -->
 
+
+<group name="FIM_Config,">
+  <rule id="100020" level="7">
+    <if_sid>550</if_sid>
+    <field name="file">^/srv/ftp/</field>
+    <description>File read in /srv/ftp</description>
+    <mitre><id>T1005</id></mitre>
+  </rule>
+
+<!-- Custom Rule for detecting if files in the /srv/samba directory have been altered -->
+
+  <rule id="100021" level="10">
+    <if_sid>550</if_sid>
+    <field name="file">^/srv/samba/</field>
+    <match>modified</match>
+    <description>File modified in /srv/samba</description>
+    <mitre><id>T1565</id></mitre>
+  </rule>
+
+<!-- Custom Rule for detecting if files in the /srv/ftp or /srv/samba directories have been deleted -->
+
+  <rule id="100022" level="12">
+    <if_sid>553</if_sid>
+    <field name="file">^/srv/ftp/|^/srv/samba/</field>
+    <match>deleted</match>
+    <description>File deleted from either /srv/ftp or /srv/samba</description>
+    <mitre><id>T1485</id></mitre>
+  </rule>
+</group>
+
+<!-- Cutom Group created for detecting FTP anomalies -->
+<!-- Custom Rule for detecting anonymous logins -->
+
+<group name="FTP_detection">
+  <rule id="100030" level="7" overwrite="yes">
+    <if_sid>11402</if_sid>
+    <match>anon</match>
+    <description>Anonymous login attempt detected</description>
+    <mitre><id>T1078</id></mitre>
+  </rule>
+
+<!-- Custom Rule: Baseline for detecting Failed FTP Auth. Attempts -->
+
+  <rule id="100031" level="3">
+    <if_sid>11403</if_sid>
+    <description>FTP authentication failure detected</description>
+  </rule>
+
+<!-- Custom Rule for detecting FTP Brute Force attack attempts -->
+
+  <rule id="100032" level="10" frequency="8" timeframe="60">
+    <if_matched_sid>100031</if_matched_sid>
+    <same_srcip />
+    <description>FTP Brute force attack detected from same IP</description>
+    <mitre><id>T1110</id></mitre>
+  </rule>
+</group>
+
+<!-- Custom Group created for detecting SMB related anomalies -->
+<!-- Custom Rule for detecting if a user uploaded files to the SMB public share -->
+
+<group name="SMB_detection">
+  <rule id="100040" level="7">
+    <if_sid>554</if_sid> 
+    <field name="file">^/srv/samba/</field>
+    <description>File uploaded to public share</description>
+  </rule>
+
+<!-- Custom Rule for detecting if a user uploaded a file with the .php extension -->
+
+  <rule id="100041" level="12">
+    <if_sid>100040</if_sid>
+    <field name="file">\.php$</field>
+    <description>Dangerous file extension '.php' uploaded to SMB public share (Possible PHP Reverse Shell)</description>
+    <mitre><id>T1570</id></mitre>
+  </rule>
+</group>
+
+<!--  -->
+<!--  -->
+
+<group name="RCE_Detection">
+  <rule id="100050" level="10" overwrite="yes">
+    <if_sid>554</if_sid> 
+    <field name="file">^/var/www/html/uploads/.*\.php$</field>
+    <description>PHP file created in /var/www/html</description>
+  </rule>
+
+  <rule id="100051" level="12">
+    <if_sid>31108</if_sid> 
+    <regex>\.php</regex>
+    <description>PHP script accessed</description>
+  </rule>
+
+  <rule id="100055" level="15">
+    <if_matched_sid>100041</if_matched_sid> 
+    <if_sid>100051</if_sid> 
+    <description>SMB-Uploaded Web Shell executed via HTTP</description>
+    <mitre><id>T1190</id>
+    <id>T1105</id></mitre>
+  </rule>
+</group>
