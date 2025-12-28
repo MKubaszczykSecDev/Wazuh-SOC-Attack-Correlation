@@ -112,7 +112,7 @@
     <if_sid>550</if_sid>
     <field name="file">^/srv/samba/</field>
     <match>modified</match>
-    <description>File modified in /srv/samba</description>
+    <description>File $(file) has been modified</description>
     <mitre><id>T1565</id></mitre>
   </rule>
 
@@ -122,7 +122,7 @@
     <if_sid>553</if_sid>
     <field name="file">^/srv/ftp/|^/srv/samba/</field>
     <match>deleted</match>
-    <description>File deleted from either /srv/ftp or /srv/samba</description>
+    <description>File deleted: $(file)</description>
     <mitre><id>T1485</id></mitre>
   </rule>
 </group>
@@ -162,7 +162,7 @@
   <rule id="100040" level="7">
     <if_sid>554</if_sid> 
     <field name="file">^/srv/samba/</field>
-    <description>File uploaded to public share</description>
+    <description>A file has been uploaded to the public share</description>
   </rule>
 
 <!-- Custom Rule for detecting if a user uploaded a file with the .php extension -->
@@ -175,27 +175,36 @@
   </rule>
 </group>
 
-<!--  -->
-<!--  -->
+<!-- Custom Group created for detecting SMB Reverse Shell and Execution -->
+<!-- Custom Rule for detecting if a file with .php extension has been uploaded to /var/www/html/uploads -->
 
-<group name="RCE_Detection">
-  <rule id="100050" level="10" overwrite="yes">
-    <if_sid>554</if_sid> 
-    <field name="file">^/var/www/html/uploads/.*\.php$</field>
-    <description>PHP file created in /var/www/html</description>
+<group name="RCE_Detection,syscheck,">
+  <rule id="100050" level="10">
+    <if_sid>554</if_sid>
+    <match>.php</match> 
+    <description>PHP Web Shell uploaded to $(file)</description>
+    <mitre><id>T1105</id></mitre>
   </rule>
+
+<!-- Custom Rule for detecting HTTP requests accessing uploaded PHP files -->
 
   <rule id="100051" level="12">
     <if_sid>31108</if_sid> 
     <regex>\.php</regex>
-    <description>PHP script accessed</description>
+    <description>PHP script accessed (possible web shell execution)</description>
   </rule>
 
-  <rule id="100055" level="15">
-    <if_matched_sid>100041</if_matched_sid> 
-    <if_sid>100051</if_sid> 
-    <description>SMB-Uploaded Web Shell executed via HTTP</description>
-    <mitre><id>T1190</id>
-    <id>T1105</id></mitre>
+<!-- Custom Rule for detecting correlation between a recently uploaded PHP file
+     and if that file was then executed -->
+
+  <rule id="100052" level="15" timeframe="60">
+    <if_sid>100051</if_sid>
+    <if_matched_sid>100050</if_matched_sid>
+    <description>Uploaded PHP file executed via HTTP</description>
+    <mitre>
+      <id>T1190</id>
+      <id>T1105</id>
+    </mitre>
   </rule>
+
 </group>
