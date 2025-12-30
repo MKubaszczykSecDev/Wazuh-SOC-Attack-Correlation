@@ -98,13 +98,23 @@
 <!-- Custom Rule for detecting if files in the /srv/ftp directory have been viewed -->
 
 
-<group name="FIM_Config,">
+<group name="FIM_Config,syscheck,audit,"> 
   <rule id="100020" level="7">
-    <if_sid>550</if_sid>
-    <field name="file">^/srv/ftp/</field>
-    <description>File read in /srv/ftp</description>
+    <if_sid>80783</if_sid>
+    <field name="audit.key">audit-wazuh-r</field>
+    <description>File read in /srv/ftp by user $(audit.auid)</description>
+    <group>audit_watch_read,syscheck,</group>
     <mitre><id>T1005</id></mitre>
   </rule>
+
+<!--
+  <rule id="100020" level="7">
+    <if_sid>80783</if_sid>
+    <field name="audit.file.name">^/srv/ftp/</field>
+    <description>File read in /srv/ftp</description>
+    <group>audit_watch_read,syscheck,</group>
+    <mitre><id>T1005</id></mitre>
+  </rule> -->
 
 <!-- Custom Rule for detecting if files in the /srv/samba directory have been altered -->
 
@@ -204,6 +214,34 @@
     <mitre>
       <id>T1190</id>
       <id>T1105</id>
+    </mitre>
+  </rule>
+</group>
+
+<!-- Custom Group for detecting Data Exfiltration attempts through archieves -->
+<!-- Custom Rule for detecting Archieve Creation -->
+
+<group name="Data_Exflitration,">
+  <rule id="100060" level="10">
+    <if_sid>554</if_sid>
+    <match>.zip|.tar|.gz|.7z</match>
+    <description>Archive created in: $(file) (possible data exfiltration)</description>
+    <mitre>
+      <id>T1020</id>
+      <id>T1560</id>
+    </mitre>
+  </rule>
+
+<!-- Custom Rule for detecting  -->
+
+  <rule id="100062" level="12">
+    <if_sid>11200,11400,11404</if_sid>
+    <match>RETR|OK DOWNLOAD</match>
+    <field name="full_log">/srv/ftp/</field>
+    <regex>[1-9][0-9]{4,} bytes</regex>
+    <description>Large FTP GET detected (≥10KB download from /srv/ftp)</description>
+    <mitre>
+      <id>T1048.003</id>
     </mitre>
   </rule>
 
