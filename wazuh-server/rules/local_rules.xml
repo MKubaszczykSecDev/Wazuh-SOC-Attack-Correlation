@@ -97,26 +97,23 @@
 <!-- Custom Group created for FIM detection rules -->
 <!-- Custom Rule for detecting if files in the /srv/ftp directory have been viewed -->
 
-
 <group name="FIM_Config,syscheck,audit,"> 
+
   <rule id="100020" level="7">
-    <if_sid>80783</if_sid>
-    <field name="audit.key">audit-wazuh-r</field>
-    <description>File read in /srv/ftp by user $(audit.auid)</description>
-    <group>audit_watch_read,syscheck,</group>
-    <mitre><id>T1005</id></mitre>
+    <if_sid>80700</if_sid>
+    <field name="audit.key">audit-ftp-read</field>
+    <field name="audit.exe" negate="yes">/var/ossec/bin/wazuh-syscheckd</field>
+    <description>File: /srv/ftp/$(audit.file.name) has been read using $(audit.command)</description>
   </rule>
 
-<!--
-  <rule id="100020" level="7">
-    <if_sid>80783</if_sid>
-    <field name="audit.file.name">^/srv/ftp/</field>
-    <description>File read in /srv/ftp</description>
-    <group>audit_watch_read,syscheck,</group>
-    <mitre><id>T1005</id></mitre>
-  </rule> -->
+  <rule id="100025" level="7">
+    <if_sid>80700</if_sid>
+    <field name="audit.key">audit-samba-read</field>
+    <field name="audit.exe" negate="yes">/var/ossec/bin/wazuh-syscheckd</field>
+    <description>File: /srv/samba/$(audit.file.name) has been read using $(audit.command)</description>
+  </rule>
 
-<!-- Custom Rule for detecting if files in the /srv/samba directory have been altered -->
+<!--Custom Rule for detecting if files in the /srv/samba directory have been altered -->
 
   <rule id="100021" level="10">
     <if_sid>550</if_sid>
@@ -221,7 +218,7 @@
 <!-- Custom Group for detecting Data Exfiltration attempts through archieves -->
 <!-- Custom Rule for detecting Archieve Creation -->
 
-<group name="Data_Exflitration,">
+<group name="Data_Exflitration,syscheck,audit,">
   <rule id="100060" level="10">
     <if_sid>554</if_sid>
     <match>.zip|.tar|.gz|.7z</match>
@@ -234,15 +231,15 @@
 
 <!-- Custom Rule for detecting  -->
 
-  <rule id="100062" level="12">
-    <if_sid>11200,11400,11404</if_sid>
-    <match>RETR|OK DOWNLOAD</match>
-    <field name="full_log">/srv/ftp/</field>
-    <regex>[1-9][0-9]{4,} bytes</regex>
-    <description>Large FTP GET detected (≥10KB download from /srv/ftp)</description>
-    <mitre>
-      <id>T1048.003</id>
-    </mitre>
+  <rule id="100061" level="12">
+    <if_sid>100020</if_sid>
+    <field name="audit.command">vsftpd</field>
+    <description>FTP GET command used to download file: $(audit.file.name)</description>
   </rule>
 
+  <rule id="100062" level="12">
+    <if_sid>100025</if_sid>
+    <field name="audit.exe">/usr/sbin/smbd</field>
+    <description>SMB Data download detected: $(audit.file.name)</description>
+  </rule>
 </group>
