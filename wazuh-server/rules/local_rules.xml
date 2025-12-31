@@ -115,7 +115,7 @@
 
 <!--Custom Rule for detecting if files in the /srv/samba directory have been altered -->
 
-  <rule id="100021" level="10">
+  <rule id="100021" level="11">
     <if_sid>550</if_sid>
     <field name="file">^/srv/samba/</field>
     <match>modified</match>
@@ -138,7 +138,7 @@
 <!-- Custom Rule for detecting anonymous logins -->
 
 <group name="FTP_detection">
-  <rule id="100030" level="7" overwrite="yes">
+  <rule id="100030" level="9" overwrite="yes">
     <if_sid>11402</if_sid>
     <match>anon</match>
     <description>Anonymous login attempt detected</description>
@@ -174,7 +174,7 @@
 
 <!-- Custom Rule for detecting if a user uploaded a file with the .php extension -->
 
-  <rule id="100041" level="12">
+  <rule id="100041" level="13">
     <if_sid>100040</if_sid>
     <field name="file">\.php$</field>
     <description>Dangerous file extension '.php' uploaded to SMB public share (Possible PHP Reverse Shell)</description>
