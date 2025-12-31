@@ -229,13 +229,15 @@
     </mitre>
   </rule>
 
-<!-- Custom Rule for detecting  -->
+<!-- Custom Rule for detecting FTP GET downloads from the srv/ftp directory -->
 
   <rule id="100061" level="12">
     <if_sid>100020</if_sid>
     <field name="audit.command">vsftpd</field>
     <description>FTP GET command used to download file: $(audit.file.name)</description>
   </rule>
+
+<!-- Custom Rule for detecting SMB GET downloads from the srv/samba directory -->
 
   <rule id="100062" level="12">
     <if_sid>100025</if_sid>
