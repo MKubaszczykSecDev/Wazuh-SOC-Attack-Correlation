@@ -1,19 +1,14 @@
---------- Guide how to use git ---------
------------------------------------------
+## Restore & Save script 
 
 I have configured aliases in my ~/.bashrc to make these commands run instantly from any directory
 
-Command___Action__________________________When to use it_____________
-------------------------------------------------------------------------------------------------------------------------
-____backup_________Copies live Wazuh configs into your Git folder___Always run this before and after making a major rule change
-
-____restore_________Pushes Git files back to the Wazuh system_______If you break your XML syntax and the manager won't start
-
-____git push________Sends your backed-up files to GitHub____________At the end of every session to save your progress online
+* backup_________Copies live Wazuh configs into your Git folder___Always run this before and after making a major rule change
+* restore_________Pushes Git files back to the Wazuh system_______If you break your XML syntax and the manager won't start
 
 The Standard "Save Point" Workflow
 When I complete a task, (with no issues) follow this exact sequence to ensure it is documented:
----------------------------------------------------------------------------------------------------------------
+
+--- 
 
 1.	Sync to local repo:
 backup
